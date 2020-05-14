@@ -46,15 +46,21 @@ public class MyPagedAdaper extends PagedListAdapter<Task, MyPagedAdaper.MyViewHo
         if(task == null) {
             holder.textView.setText("loading");
         } else {
-            holder.textView.setText(String.valueOf(task.getTaskName()));
+            holder.textView.setText("批号:" + task.getTaskName());
+            holder.textView2.setText("工序名称:" + task.getTaskName() + "卷号:" + task.getTaskName());
+            holder.textView3.setText("成品合金:" + task.getTaskName() + "成品状态:" + task.getTaskName());
+            holder.textView4.setText("工序参数:" + task.getTaskName());
         }
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        TextView textView, textView2, textView3, textView4;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.textView);
+            textView2 = itemView.findViewById(R.id.textView2);
+            textView3 = itemView.findViewById(R.id.textView3);
+            textView4 = itemView.findViewById(R.id.textView4);
         }
     }
 }

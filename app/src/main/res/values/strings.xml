@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">PageDemo</string>
-    <string name="button">生成</string>
-    <string name="button2">清除</string>
+    <string name="button">搜索</string>
 </resources>

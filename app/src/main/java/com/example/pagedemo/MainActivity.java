@@ -16,7 +16,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    Button buttonPopulate,buttonClear;
+    Button buttonPopulate;
     TaskDao taskDao;
     TasksDatabase tasksDatabase;
     MyPagedAdaper pagedAdaper;
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recyclerView);
+        buttonPopulate = findViewById(R.id.button3);
         pagedAdaper = new MyPagedAdaper();
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
@@ -40,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 pagedAdaper.submitList(tasks);
             }
         });
-        buttonPopulate = findViewById(R.id.button);
-        buttonClear = findViewById(R.id.button2);
 
         buttonPopulate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,16 +48,10 @@ public class MainActivity extends AppCompatActivity {
                 Task[] tasks = new Task[1000];
                 for (int i = 0; i<1000; i++) {
                     Task task = new Task();
-                    task.setTaskName("任务" + i);
+                    task.setTaskName("测试数据" + i + "*******");
                     tasks[i] = task;
                 }
                 new InsertAsyncTask(taskDao).execute(tasks);
-            }
-        });
-        buttonClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ClearAsyncTask(taskDao).execute();
             }
         });
     }
