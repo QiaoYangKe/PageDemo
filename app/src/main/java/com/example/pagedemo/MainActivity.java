@@ -1,5 +1,6 @@
 package com.example.pagedemo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -9,11 +10,16 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -33,6 +39,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(pagedAdaper);
+        recyclerView.addOnItemTouchListener(new MyItemTouchListener(recyclerView) {
+            @Override
+            public void onItemClick(RecyclerView.ViewHolder vh) {
+                TextView textView = findViewById(R.id.textView);
+                Toast.makeText(MainActivity.this,textView.getText(),Toast.LENGTH_SHORT).show();
+            }
+        });
         tasksDatabase = TasksDatabase.getInstance(this);
         taskDao = tasksDatabase.getTaskDao();
         allTasksPaged = new LivePagedListBuilder<>(taskDao.getAllTasks(),2).build();
@@ -49,6 +62,28 @@ public class MainActivity extends AppCompatActivity {
                 initAsyncTask();
             }
         });
+    }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()) {
+                case R.id.btn_take_photo:
+                    System.out.println("btn_take_photo");
+                    break;
+                case R.id.btn_pick_photo:
+                    System.out.println("btn_pick_photo");
+                    break;
+            }
+        }
+    };
+
+    @SuppressLint("ResourceType")
+    public void showPopFormBottom(View view) {
+        TakeToolPopWin takeToolPopWin = new TakeToolPopWin(this, onClickListener);
+        //showAtLocation(View parent, int gravity, int x, int y)
+        takeToolPopWin.showAtLocation(findViewById(R.layout.activity_main), Gravity.CENTER, 0, 0);
     }
 
     public void initAsyncTask () {

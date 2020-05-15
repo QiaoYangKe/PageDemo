@@ -1,23 +1,18 @@
 package com.example.pagedemo;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.paging.DataSource;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Database;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MyPagedAdaper extends PagedListAdapter<Task, MyPagedAdaper.MyViewHolder> {
-
 
     protected MyPagedAdaper() {
         super(new DiffUtil.ItemCallback<Task>() {
@@ -45,6 +40,7 @@ public class MyPagedAdaper extends PagedListAdapter<Task, MyPagedAdaper.MyViewHo
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Task task = getItem(position);
