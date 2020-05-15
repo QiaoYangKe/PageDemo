@@ -13,10 +13,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    Button buttonPopulate;
+    ImageButton buttonPopulate;
     TaskDao taskDao;
     TasksDatabase tasksDatabase;
     MyPagedAdaper pagedAdaper;
@@ -41,19 +42,24 @@ public class MainActivity extends AppCompatActivity {
                 pagedAdaper.submitList(tasks);
             }
         });
-
+        initAsyncTask();
         buttonPopulate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Task[] tasks = new Task[1000];
-                for (int i = 0; i<1000; i++) {
-                    Task task = new Task();
-                    task.setTaskName("测试数据" + i + "*******");
-                    tasks[i] = task;
-                }
-                new InsertAsyncTask(taskDao).execute(tasks);
+                initAsyncTask();
             }
         });
+    }
+
+    public void initAsyncTask () {
+        new ClearAsyncTask(taskDao).execute();
+        Task[] tasks = new Task[1000];
+        for (int i = 0; i<1000; i++) {
+            Task task = new Task();
+            task.setTaskName("测试数据" + i + "*******");
+            tasks[i] = task;
+        }
+        new InsertAsyncTask(taskDao).execute(tasks);
     }
 
     static class InsertAsyncTask extends AsyncTask<Task,Void,Void> {
