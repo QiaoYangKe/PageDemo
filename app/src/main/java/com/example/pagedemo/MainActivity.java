@@ -9,11 +9,23 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import com.example.pagedemo.models.sessions.GetCurrentLoginInformationsOutput;
+import com.example.pagedemo.models.token_auth.AuthenticateModel;
+import com.example.pagedemo.models.token_auth.AuthenticateResultModel;
+import com.example.pagedemo.utils.EasyToast;
+import com.example.pagedemo.utils.ServiceCallback;
+import com.example.pagedemo.utils.ServiceHttpClient;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -35,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(pagedAdaper);
         tasksDatabase = TasksDatabase.getInstance(this);
         taskDao = tasksDatabase.getTaskDao();
+        initAsyncTask();
         allTasksPaged = new LivePagedListBuilder<>(taskDao.getAllTasks(),2).build();
         allTasksPaged.observe(this, new Observer<PagedList<Task>>() {
             @Override
@@ -42,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 pagedAdaper.submitList(tasks);
             }
         });
-        initAsyncTask();
         buttonPopulate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,8 +64,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initAsyncTask () {
+        ServiceCallback queryCallback = new ServiceCallback() {
+            @Override
+            public void onSuccess(Object resultObj) {
+                super.onSuccess(resultObj);
+                Toast.makeText(MainActivity.this,resultObj.toString(),Toast.LENGTH_LONG).show();
+            }
+        };
         new ClearAsyncTask(taskDao).execute();
         Task[] tasks = new Task[1000];
+        String url = "/services/app/EquipmentTask/GetMachineTasks";
+        ServiceHttpClient.getInstance().Get(url,
+        null, Task.class, MainActivity.this, queryCallback);
         for (int i = 0; i<1000; i++) {
             Task task = new Task();
             task.setTaskName("测试数据" + i + "*******");
